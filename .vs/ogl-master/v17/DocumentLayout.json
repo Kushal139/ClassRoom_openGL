@@ -1,0 +1,91 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\kusha\\OneDrive\\Desktop\\openGL\\ogl-master\\ogl-master\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\kusha\\OneDrive\\Desktop\\openGL\\ogl-master\\ogl-master\\tutorial07_model_loading\\tutorial07.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:tutorial07_model_loading\\tutorial07.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\kusha\\OneDrive\\Desktop\\openGL\\ogl-master\\ogl-master\\tutorial04_colored_cube\\box.obj||{58961B49-13E0-48C0-9258-13CBC4D40279}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:tutorial04_colored_cube\\box.obj||{58961B49-13E0-48C0-9258-13CBC4D40279}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\kusha\\OneDrive\\Desktop\\openGL\\ogl-master\\ogl-master\\tutorial05_textured_cube\\tutorial05.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:tutorial05_textured_cube\\tutorial05.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\kusha\\OneDrive\\Desktop\\openGL\\ogl-master\\ogl-master\\tutorial04_colored_cube\\tutorial04.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:tutorial04_colored_cube\\tutorial04.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 1,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{3ae79031-e1bc-11d0-8f78-00a0c9110057}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "tutorial07.cpp",
+              "DocumentMoniker": "C:\\Users\\kusha\\OneDrive\\Desktop\\openGL\\ogl-master\\ogl-master\\tutorial07_model_loading\\tutorial07.cpp",
+              "RelativeDocumentMoniker": "tutorial07_model_loading\\tutorial07.cpp",
+              "ToolTip": "C:\\Users\\kusha\\OneDrive\\Desktop\\openGL\\ogl-master\\ogl-master\\tutorial07_model_loading\\tutorial07.cpp",
+              "RelativeToolTip": "tutorial07_model_loading\\tutorial07.cpp",
+              "ViewState": "AgIAAGMAAAAAAAAAAAAAAHYAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2025-11-05T10:49:16.757Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "box.obj",
+              "DocumentMoniker": "C:\\Users\\kusha\\OneDrive\\Desktop\\openGL\\ogl-master\\ogl-master\\tutorial04_colored_cube\\box.obj",
+              "RelativeDocumentMoniker": "tutorial04_colored_cube\\box.obj",
+              "ToolTip": "C:\\Users\\kusha\\OneDrive\\Desktop\\openGL\\ogl-master\\ogl-master\\tutorial04_colored_cube\\box.obj",
+              "RelativeToolTip": "tutorial04_colored_cube\\box.obj",
+              "Icon": "00000000-0000-0000-0000-000000000000.000000|iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAARcSURBVEhLpZRRTFNnFMf/lzuCBjRIYOIyp519cTwQSIiQsJg7QaMm1GJIDNMVmbVJGdFAxigpcTwRoVlIKxkxxhpilsjEJ3zRh5HFxAdTArtgtJS2MNasDbCWfgeY09M9jDb0brrO/ZKb3Hv\u002B53/Ol\u002B9\u002B3wHegNVqrSWisBAiduXKlXqt/q8kEgltKEVzc/MnQgjv06dPWVVVJqLg5cuX67R5b0V3d7dRCPGzqqpssVi4qamJnzx5wkKIXxwOx6fa/P\u002BE2Ww\u002BIoQIhUIhNpvNrCgKK4rCTU1NPDc3x0S03NXVZZQkSWv9R\u002BStH2az\u002BcjAwMC3wWDwg6tXr8Ln86W0WCyG6elp6PX67QaD4dDGxkbw8ePHz5O6yWT6eG1t7cXKyopImbayuS2h6elptlgsqZVrn6GhISYiJqLvk97bt2\u002B3CCEWPR7PrZycnHe21s3C5g/t7Ox0rq6uFjudTni93q05fyVmZUFRFJw7dw6JRGKqurq6u6io6F2Xy2UxGo196\u002Bvr7\u002Bn1\u002Bs\u002BWl5e/27lz5/akT7JarbV9fX2DgUBA73Q607YliSzLqKmpQXNzM3Jzc7UyVFWF2\u002B1GZWUlTp8\u002BjWfPng03NjZ\u002B5fP5whIRRebn5wsHBgYwOzur9QIAJEnCnj17sGPHDq0EAAiHw4hGo9i2bRtOnTqFs2fP/u7z\u002BUZKS0tNEhGt\u002Bv3\u002BPIfDgYWFhTSjLMvYtWsXZFkGEUEIgd27d6f0WCyGjY2NNA8AXLx4EXV1dUgkErfk7Ozs5ydPnjx04MCBfK/Xi1gsBmzueW1tLbq6utDQ0ABmxtTUFO7cuQODwYD9\u002B/fD6/UiGo2mFd\u002B3bx\u002BOHz\u002BOwsLC\u002Bf7\u002B/mtZPT099\u002Bx2\u002B6WDBw/\u002BarfbodPpAACHDx/G\u002BfPnkZeX92NahU0mJiYQDAbTYjqdDna7HZu1LvX09NxLiQ6Ho1EIsTI5OZk8ii8XFhZ\u002BKCkpeZ\u002BI2O12s6IoySPKRMS9vb189OjR1EWcnJxkIcSKw\u002BFoTOucxGazGYkoQEQcDofHFUX5CABe1yAcDnN/fz9fuHCBPR4Px\u002BPxuM1me/1QlCQJbW1tBiHEyN69ewuS8dc1ICJeWlriUCjERMRCiD9mZma\u002BSa\u002BaAW9qQETs9/u5o6ODx8bGOB6P84MHD3oLCgpyASDtWmfC9evXtSGoqopAIACfz4dXr16hpqbGeuPGjZf19fXdGY1EIuKRkREMDw9rpb\u002BRnZ0Ni8WCY8eOvYhEIkMZN9DGQqEQXC4XVFVNi\u002Bfn58NqtaKqquq38fHx3owamEymz5Pvg4ODVkmSytxuN0ZHR9PyiouL0dLSgrKyspWbN29\u002B3draei0tIRPKy8t1RPRTNBrl9vb21Bg3Go386NEjFkLw6OhomyzLWVpvxpw5c6YqEolMLS4uss1m44aGBn748CET0dLdu3fbtflvxYkTJ0qFEB6/388TExMshFh2uVxf/K\u002BVa6moqPiQiGbW1tYS9\u002B/f/1KrA8Cftp6PBUjYvqAAAAAASUVORK5CYII=",
+              "WhenOpened": "2025-11-05T10:48:21.649Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "tutorial05.cpp",
+              "DocumentMoniker": "C:\\Users\\kusha\\OneDrive\\Desktop\\openGL\\ogl-master\\ogl-master\\tutorial05_textured_cube\\tutorial05.cpp",
+              "RelativeDocumentMoniker": "tutorial05_textured_cube\\tutorial05.cpp",
+              "ToolTip": "C:\\Users\\kusha\\OneDrive\\Desktop\\openGL\\ogl-master\\ogl-master\\tutorial05_textured_cube\\tutorial05.cpp",
+              "RelativeToolTip": "tutorial05_textured_cube\\tutorial05.cpp",
+              "ViewState": "AgIAAEUAAAAAAAAAAADwv8IAAAAnAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2025-10-07T11:50:59.458Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "tutorial04.cpp",
+              "DocumentMoniker": "C:\\Users\\kusha\\OneDrive\\Desktop\\openGL\\ogl-master\\ogl-master\\tutorial04_colored_cube\\tutorial04.cpp",
+              "RelativeDocumentMoniker": "tutorial04_colored_cube\\tutorial04.cpp",
+              "ToolTip": "C:\\Users\\kusha\\OneDrive\\Desktop\\openGL\\ogl-master\\ogl-master\\tutorial04_colored_cube\\tutorial04.cpp",
+              "RelativeToolTip": "tutorial04_colored_cube\\tutorial04.cpp",
+              "ViewState": "AgIAABsAAAAAAAAAAAASwCwAAAATAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2025-10-07T11:46:19.317Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

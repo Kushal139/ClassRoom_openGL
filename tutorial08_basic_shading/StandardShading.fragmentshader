@@ -1,0 +1,22 @@
+#version 330 core
+
+in vec3 vNormal;
+in vec3 vWorldPos;
+in vec2 vUV;
+
+uniform bool useTexture;
+uniform sampler2D myTextureSampler;
+uniform vec3 materialColor;
+
+out vec3 color;
+
+void main() {
+    vec3 baseColor;
+
+    if (useTexture)
+        baseColor = texture(myTextureSampler, vUV).rgb;
+    else
+        baseColor = materialColor;
+
+    color = baseColor;
+}

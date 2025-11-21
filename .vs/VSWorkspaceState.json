@@ -1,0 +1,16 @@
+{
+  "OutputFoldersPerTargetSystem": {
+    "Local Machine": [
+      "out\\build\\x64-Debug",
+      "out\\install\\x64-Debug"
+    ]
+  },
+  "ExpandedNodes": [
+    "",
+    "\\build",
+    "\\tutorial01_first_window",
+    "\\tutorial04_colored_cube",
+    "\\tutorial05_textured_cube"
+  ],
+  "PreviewInSolutionExplorer": false
+}
