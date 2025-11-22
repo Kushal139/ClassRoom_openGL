@@ -681,8 +681,10 @@ add_executable(project_classroom
 	common/vboindexer.cpp
 	common/vboindexer.hpp
 	
-	project_classroom/StandardShading.vertexshader
-	project_classroom/StandardShading.fragmentshader
+	project_classroom/Phong.vertexshader
+	project_classroom/Phong.fragmentshader
+	project_classroom/Gouraud.vertexshader
+	project_classroom/Gouraud.fragmentshader
 )
 target_link_libraries(project_classroom
 	${ALL_LIBS}
