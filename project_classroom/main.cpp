@@ -4,6 +4,7 @@
 #include <vector>
 #include <string>
 #include <iostream>
+#include <cfloat>
 
 // Include GLEW
 #include <GL/glew.h>
@@ -25,170 +26,168 @@ using namespace glm;
 
 struct GLMesh {
     GLuint vao, vertexbuffer, uvbuffer, normalbuffer, elementbuffer;
-	std::vector<unsigned short> indices;
+    std::vector<unsigned short> indices;
     GLuint textureID;
-	glm::vec3 metarialColor;
+    glm::vec3 metarialColor;
     bool useTexture;
     int vertexCount;
 };
 
 std::vector<GLMesh> GLMeshes;
 
-int main( void )
+int main(void)
 {
-	// Initialize GLFW
-	if( !glfwInit() )
-	{
-		fprintf( stderr, "Failed to initialize GLFW\n" );
-		getchar();
-		return -1;
-	}
+    // Initialize GLFW
+    if (!glfwInit())
+    {
+        fprintf(stderr, "Failed to initialize GLFW\n");
+        getchar();
+        return -1;
+    }
 
-	glfwWindowHint(GLFW_SAMPLES, 4);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); // To make macOS happy; should not be needed
-	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+    glfwWindowHint(GLFW_SAMPLES, 4);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); // To make macOS happy; should not be needed
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-	// Open a window and create its OpenGL context
-	window = glfwCreateWindow( 1024, 768, "Classroom", NULL, NULL);
-	if( window == NULL ){
-		fprintf( stderr, "Failed to open GLFW window. If you have an Intel GPU, they are not 3.3 compatible. Try the 2.1 version of the tutorials.\n" );
-		getchar();
-		glfwTerminate();
-		return -1;
-	}
-	glfwMakeContextCurrent(window);
+    // Open a window and create its OpenGL context
+    int windowWidth = 1024;
+    int windowHeight = 768;
+    window = glfwCreateWindow(windowWidth, windowHeight, "Classroom", NULL, NULL);
+    if (window == NULL) {
+        fprintf(stderr, "Failed to open GLFW window.\n");
+        getchar();
+        glfwTerminate();
+        return -1;
+    }
+    glfwMakeContextCurrent(window);
 
-	glewExperimental = true; // Needed for core profile
-	if (glewInit() != GLEW_OK) {
-		fprintf(stderr, "Failed to initialize GLEW\n");
-		getchar();
-		glfwTerminate();
-		return -1;
-	}
+    glewExperimental = true; // Needed for core profile
+    if (glewInit() != GLEW_OK) {
+        fprintf(stderr, "Failed to initialize GLEW\n");
+        getchar();
+        glfwTerminate();
+        return -1;
+    }
 
-	glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE);
+    glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE);
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-    
+
     glfwPollEvents();
-    glfwSetCursorPos(window, 1024/2, 768/2);
+    glfwSetCursorPos(window, windowWidth / 2, windowHeight / 2);
 
-	glClearColor(0.0f, 0.0f, 0.4f, 0.0f);
+    glClearColor(0.0f, 0.0f, 0.1f, 0.0f);
 
-	glEnable(GL_DEPTH_TEST);
-	glDepthFunc(GL_LESS); 
-	glEnable(GL_CULL_FACE);
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_LESS);
+    glEnable(GL_CULL_FACE);
 
-	GLuint phongProgram = LoadShaders( "Phong.vertexshader", "Phong.fragmentshader" );
-	GLuint gouraudProgram = LoadShaders( "Gouraud.vertexshader", "Gouraud.fragmentshader" );
+    GLuint phongProgram = LoadShaders("Phong.vertexshader", "Phong.fragmentshader");
+    GLuint gouraudProgram = LoadShaders("Gouraud.vertexshader", "Gouraud.fragmentshader");
+    // GLuint depthProgram = LoadShaders("Depth.vertexshader", "Depth.fragmentshader");
 
-	bool usePhong = false;
-	// switch in runtime
-	GLuint programID = usePhong ? phongProgram : gouraudProgram;	
+    bool usePhong = true;
+    GLuint programID = usePhong ? phongProgram : gouraudProgram;
 
-	const int NUM_LIGHTS = 9;
-	std::vector<glm::vec3> lightPositions;
-	float roomX = 9.0f;
-	float roomY = 3.1f;
-	float roomZ = 7.0f;
+    const int NUM_LIGHTS = 9;
+    std::vector<glm::vec3> lightPositions;
 
-	float stepX = roomX / 3.0f;
-	float stepZ = roomZ / 3.0f;    
+    float roomX = 9.0f;
+    float roomZ = 7.0f;
+    float ceilingY = -0.2f;
 
-	for(int iy = 1; iy <= 3; iy++){
-		for(int ix = 1; ix <= 3; ix++){
-			float x = stepX * ix - stepX/2.0f;
-			float y = 0.0f;
-			float z = stepZ * iy - stepZ/2.0f;;
+    float stepX = roomX / 3.0f;
+    float stepZ = roomZ / 3.0f;
 
-			lightPositions.push_back(glm::vec3(x, y, z));
-			std::cout << "std::cout << \"light at ("
-					<< x << ", " << y << ", " << z << ")\\n\";\n\n";
-		}
-	}
+    for (int iz = 1; iz <= 3; iz++) {
+        for (int ix = 1; ix <= 3; ix++) {
+            float x = stepX * ix - stepX / 2.0f; 
+            float y = ceilingY;                
+            float z = stepZ * iz - stepZ / 2.0f;  
 
-	GLuint MatrixID = glGetUniformLocation(programID, "MVP");
-	GLuint ViewMatrixID = glGetUniformLocation(programID, "V");
-	GLuint ModelMatrixID = glGetUniformLocation(programID, "M");
-	GLuint TextureID  = glGetUniformLocation(programID, "myTextureSampler");
-	GLuint MaterialColorID = glGetUniformLocation(programID, "materialColor");
+            lightPositions.push_back(glm::vec3(x, y, z));
+            std::cout << "light at (" << x << ", " << y << ", " << z << ")\n";
+        }
+    }
 
+    glm::vec3 mainLightPos = lightPositions[4];
+    glUseProgram(programID);
 
-	// ---------- Load OBJ with materials ----------
+    GLuint MatrixID = glGetUniformLocation(programID, "MVP");
+    GLuint ViewMatrixID = glGetUniformLocation(programID, "V");
+    GLuint ModelMatrixID = glGetUniformLocation(programID, "M");
+    GLuint TextureID = glGetUniformLocation(programID, "myTextureSampler");
+    GLuint MaterialColorID = glGetUniformLocation(programID, "materialColor");
+    GLint  useTextureLoc = glGetUniformLocation(programID, "useTexture");
+    GLint  lightPosLoc = glGetUniformLocation(programID, "LightPosition_worldspace");
+
+    glUniform3fv(lightPosLoc, NUM_LIGHTS, &lightPositions[0].x);
+
+    // GLint depthMVPLoc  = glGetUniformLocation(programID, "depthMVP");
+    // GLint shadowMapLoc = glGetUniformLocation(programID, "shadowMap");
+
+    // glUniform1i(TextureID, 0);     
+    // glUniform1i(shadowMapLoc, 1);
+
     std::vector<MaterialMesh> materialMeshes;
     loadOBJWithMaterials("room.obj", materialMeshes);
-
     std::cout << "Loaded " << materialMeshes.size() << " material meshes\n";
 
-	glm::vec3 minV(FLT_MAX), maxV(-FLT_MAX);
-	for (auto &m : materialMeshes) {
-		for (auto &v : m.vertices) {
-			minV.x = std::min(minV.x, v.x);
-			minV.y = std::min(minV.y, v.y);
-			minV.z = std::min(minV.z, v.z);
+	// model size
+    glm::vec3 minV(FLT_MAX), maxV(-FLT_MAX);
 
-			maxV.x = std::max(maxV.x, v.x);
-			maxV.y = std::max(maxV.y, v.y);
-			maxV.z = std::max(maxV.z, v.z);
-		}
-	}
+    for (auto &m : materialMeshes) {
+        for (auto &v : m.vertices) {
+            minV.x = std::min(minV.x, v.x);
+            minV.y = std::min(minV.y, v.y);
+            minV.z = std::min(minV.z, v.z);
 
-	glm::vec3 modelCenter = (minV + maxV) * 0.5f;
-	glm::vec3 modelSize   = maxV - minV;
+            maxV.x = std::max(maxV.x, v.x);
+            maxV.y = std::max(maxV.y, v.y);
+            maxV.z = std::max(maxV.z, v.z);
+        }
+    }
 
-	std::cout << "Model center: " 
-			<< modelCenter.x << ", " 
-			<< modelCenter.y << ", " 
-			<< modelCenter.z << std::endl;
+    glm::vec3 modelCenter = (minV + maxV) * 0.5f;
+    glm::vec3 modelSize   = maxV - minV;
 
-	std::cout << "Model size: " 
-			<< modelSize.x << ", "
-			<< modelSize.y << ", "
-			<< modelSize.z << std::endl;
+    std::cout << "Model center: " << modelCenter.x << ", " << modelCenter.y << ", " << modelCenter.z << std::endl;
+    std::cout << "Model size: "   << modelSize.x   << ", " << modelSize.y   << ", " << modelSize.z   << std::endl;
+    std::cout << "Bounding box min: " << minV.x << ", " << minV.y << ", " << minV.z << std::endl;
+    std::cout << "Bounding box max: " << maxV.x << ", " << maxV.y << ", " << maxV.z << std::endl;
 
-	std::cout << "Bounding box min: " 
-			<< minV.x << ", " 
-			<< minV.y << ", " 
-			<< minV.z << std::endl;
-	std::cout << "Bounding box max: " 
-			<< maxV.x << ", "
-			<< maxV.y << ", "
-			<< maxV.z << std::endl;
-
-
-	// from material meshes to GLMeshes
-    for (auto& m : materialMeshes)
+	// material meshes to GLMeshes
+    for (auto &m : materialMeshes)
     {
         GLMesh glmesh;
-		glmesh.vertexCount = m.vertices.size();
-        glmesh.useTexture = false;
-        glmesh.textureID = 0;
+        glmesh.vertexCount = (int)m.vertices.size();
+        glmesh.useTexture  = false;
+        glmesh.textureID   = 0;
 
         if (m.materialName == "wood") {
             glmesh.textureID = loadBMP_custom("bench_wood.bmp");
             glmesh.useTexture = true;
-            std::cout << "Wood mesh uses texture bench_texture.bmp\n";
         }
         else if (m.materialName == "board") {
-			glmesh.useTexture = false;
-			glmesh.metarialColor = glm::vec3(0.0f, 0.55f, 0.29f); // dark green
+            glmesh.useTexture   = false;
+            glmesh.metarialColor = glm::vec3(.03f, .30f, .11f);
             std::cout << "green board\n";
         }
-		else if (m.materialName == "projector"){
-			glmesh.useTexture = false;
-			glmesh.metarialColor = glm::vec3(0.8f, 0.8f, 0.8f); // light gray
-			std::cout << "projector\n";
-		}
+        else if (m.materialName == "projector") {
+            glmesh.useTexture   = false;
+            glmesh.metarialColor = glm::vec3(0.8f, 0.8f, 0.8f);
+            std::cout << "projector\n";
+        }
 		else if(m.materialName == "podium"){
 			glmesh.useTexture = false;
 			glmesh.metarialColor = glm::vec3(0.88f, 0.63f, 0.27f); // 
-			std::cout << "podium\n";
-		}
-		else if (m.materialName == "wall") {
+            std::cout << "podium\n";
+        }
+        else if (m.materialName == "wall") {
 			glmesh.useTexture = false;
 			glmesh.metarialColor = glm::vec3(1.0f, .99f, .81f); // yellowish
-		}
+        }
 		else if (m.materialName == "metal"){
 			glmesh.useTexture = false;
 			glmesh.metarialColor = glm::vec3(0.8f, 0.8f, 0.8f); // light gray
@@ -196,14 +195,10 @@ int main( void )
 		else if (m.materialName == "floor") {
 			glmesh.useTexture = true;
 			glmesh.textureID = loadBMP_custom("floor_texture.bmp");
-		}
+        }
 
-		MaterialMesh indexedMesh = m;
-		/*indexedMesh.materialName = m.materialName;*/
+        MaterialMesh indexedMesh = m;
 
-		std::vector<unsigned short> indices;
-		//indexVBO(m.vertices, m.uvs, m.normals, indices, indexedMesh.vertices, indexedMesh.uvs, indexedMesh.normals);
-		glmesh.indices = indices;
         glGenVertexArrays(1, &glmesh.vao);
         glBindVertexArray(glmesh.vao);
 
@@ -225,13 +220,46 @@ int main( void )
         GLMeshes.push_back(glmesh);
     }
 
-	// For speed computation
-	double lastTime = glfwGetTime();
-	int nbFrames = 0;
+	// const GLuint SHADOW_WIDTH  = 2048;
+	// const GLuint SHADOW_HEIGHT = 2048;
 
-	do{
-		double currentTime = glfwGetTime();
-		nbFrames++;
+	// GLuint shadowFBO;
+	// glGenFramebuffers(1, &shadowFBO);
+
+	// GLuint shadowDepthTex;
+	// glGenTextures(1, &shadowDepthTex);
+	// glBindTexture(GL_TEXTURE_2D, shadowDepthTex);
+	// glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT,
+	// 			SHADOW_WIDTH, SHADOW_HEIGHT, 0,
+	// 			GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+
+	// glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	// glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	// glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	// glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+	// glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE, GL_COMPARE_R_TO_TEXTURE);
+	// glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_FUNC, GL_LEQUAL);
+	// glBindFramebuffer(GL_FRAMEBUFFER, shadowFBO);
+	// glFramebufferTexture2D(GL_FRAMEBUFFER,
+	// 					GL_DEPTH_ATTACHMENT,
+	// 					GL_TEXTURE_2D,
+	// 					shadowDepthTex,
+	// 					0);
+
+	// glDrawBuffer(GL_NONE);
+	// glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+	// // depth shader uniform
+	// GLuint depthMVPLocation = glGetUniformLocation(depthProgram, "depthMVP");
+
+    // For speed computation
+    double lastTime = glfwGetTime();
+    int nbFrames = 0;
+
+    do {
+        double currentTime = glfwGetTime();
+        nbFrames++;
 			if(glfwGetKey(window, GLFW_KEY_SPACE ) == GLFW_PRESS){
 			usePhong = !usePhong;
 			while(glfwGetKey(window, GLFW_KEY_SPACE ) == GLFW_PRESS){
@@ -242,33 +270,93 @@ int main( void )
 		if ( currentTime - lastTime >= 1.0 ){ // If last prinf() was more than 1sec ago
 			// printf and reset
 			printf("%f ms/frame\n", 1000.0/double(nbFrames));
-			printf("%s \n", usePhong ? "Phong" : "Gouraud");
-			nbFrames = 0;
-			lastTime += 1.0;
-		}
+            printf("%s \n", usePhong ? "Phong" : "Gouraud");
+            nbFrames = 0;
+            lastTime += 1.0;
+        }
 
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		glUseProgram(programID);
-		GLint lightPosLoc = glGetUniformLocation(programID, "LightPosition_worldspace");
+        // glBindFramebuffer(GL_FRAMEBUFFER, shadowFBO);
+        // glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
+        // glClear(GL_DEPTH_BUFFER_BIT);
+
+        // glUseProgram(depthProgram);
+
+        // glm::mat4 depthProjectionMatrix = glm::ortho<float>(
+        //     -modelSize.x * 0.6f, modelSize.x * 0.6f,
+        //     -modelSize.z * 0.6f, modelSize.z * 0.6f,
+        //     -10.0f, 20.0f
+        // );
+
+        // glm::mat4 depthViewMatrix = glm::lookAt(
+        //     mainLightPos + glm::vec3(0.0f, 0.2f, 0.0f), 
+        //     modelCenter,
+        //     glm::vec3(0, 0, 1)
+        // );
+
+        // glm::mat4 depthModelMatrix = glm::mat4(1.0f);
+        // glm::mat4 depthMVP = depthProjectionMatrix * depthViewMatrix * depthModelMatrix;
+        // glUniformMatrix4fv(depthMVPLocation, 1, GL_FALSE, &depthMVP[0][0]);
+
+        // for (auto &m : GLMeshes) {
+        //     glBindVertexArray(m.vao);
+        //     glEnableVertexAttribArray(0);
+        //     glBindBuffer(GL_ARRAY_BUFFER, m.vertexbuffer);
+        //     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
+        //     glDrawArrays(GL_TRIANGLES, 0, m.vertexCount);
+        // }
+        // glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+        // glm::mat4 bias(
+		// 	0.5,0.0,0.0,0.0,
+		// 	0.0,0.5,0.0,0.0,
+		// 	0.0,0.0,0.5,0.0,
+		// 	0.5,0.5,0.5,1.0
+		// );
+		// glm::mat4 depthBiasMVP = bias * depthMVP;
+
+		// glUniformMatrix4fv(glGetUniformLocation(programID, "DepthBiasMVP"),
+		// 				1, GL_FALSE, &depthBiasMVP[0][0]);
+
+		// // Bind shadow map
+		// glActiveTexture(GL_TEXTURE1);
+		// glBindTexture(GL_TEXTURE_2D, shadowDepthTex);
+		// glUniform1i(glGetUniformLocation(programID, "shadowMap"), 1);
+
+        // glViewport(0, 0, windowWidth, windowHeight);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        // For now, we keep the same programID (usePhong).
+        glUseProgram(programID);
+
+        // Bind shadow map to texture unit 1
+        // glActiveTexture(GL_TEXTURE1);
+        // glBindTexture(GL_TEXTURE_2D, shadowDepthTex);
+        // glUniform1i(shadowMapLoc, 1);
+        // glUniformMatrix4fv(depthMVPLoc, 1, GL_FALSE, &depthMVP[0][0]);
+
+		MatrixID = glGetUniformLocation(programID, "MVP");
+		ViewMatrixID = glGetUniformLocation(programID, "V");
+		ModelMatrixID = glGetUniformLocation(programID, "M");
+		TextureID = glGetUniformLocation(programID, "myTextureSampler");
+		MaterialColorID = glGetUniformLocation(programID, "materialColor");
+		useTextureLoc = glGetUniformLocation(programID, "useTexture");
+		lightPosLoc = glGetUniformLocation(programID, "LightPosition_worldspace");
+
 		glUniform3fv(lightPosLoc, NUM_LIGHTS, &lightPositions[0].x);
 
-		GLuint MatrixID = glGetUniformLocation(programID, "MVP");
-		GLuint ViewMatrixID = glGetUniformLocation(programID, "V");
-		GLuint ModelMatrixID = glGetUniformLocation(programID, "M");
-		GLuint TextureID  = glGetUniformLocation(programID, "myTextureSampler");
-		GLuint MaterialColorID = glGetUniformLocation(programID, "materialColor");
-
-		computeMatricesFromInputs();
-		glm::mat4 ProjectionMatrix = getProjectionMatrix();
+        // Update camera matrices
+        computeMatricesFromInputs();
+        glm::mat4 ProjectionMatrix = getProjectionMatrix();
 		glm::mat4 ViewMatrix = getViewMatrix();
-		glm::mat4 ModelMatrix = glm::mat4(1.0);
+		glm::mat4 ModelMatrix = glm::mat4(1.0f);
 		glm::mat4 MVP = ProjectionMatrix * ViewMatrix * ModelMatrix;
 
 		glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);
-		glUniformMatrix4fv(ModelMatrixID, 1, GL_FALSE, &ModelMatrix[0][0]);
+        glUniformMatrix4fv(ModelMatrixID, 1, GL_FALSE, &ModelMatrix[0][0]);
 		glUniformMatrix4fv(ViewMatrixID, 1, GL_FALSE, &ViewMatrix[0][0]);
-
-        for (auto& m : GLMeshes) {
+		
+        // Draw all meshes
+        for (auto &m : GLMeshes) {
 
             glBindVertexArray(m.vao);
 
@@ -284,29 +372,32 @@ int main( void )
             glBindBuffer(GL_ARRAY_BUFFER, m.normalbuffer);
             glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, 0);
 
-			// glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m.elementbuffer);
-
+            // Texture / material
             if (m.useTexture) {
 				glUniform1i(glGetUniformLocation(programID,"useTexture"), 1);
 				glUniform3f(MaterialColorID, 1,1,1);
-				glActiveTexture(GL_TEXTURE0);
-				glBindTexture(GL_TEXTURE_2D, m.textureID);
-				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-				glUniform1i(TextureID, 0);
+                glActiveTexture(GL_TEXTURE0);
+                glBindTexture(GL_TEXTURE_2D, m.textureID);
+                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+                glUniform1i(TextureID, 0);
 			} else {
 				glUniform1i(glGetUniformLocation(programID,"useTexture"), 0);
 				glUniform3f(MaterialColorID, m.metarialColor.x, m.metarialColor.y, m.metarialColor.z);
-			}
-            //glDrawElements(GL_TRIANGLES, m.indices.size(), GL_UNSIGNED_SHORT, (void*)0);
-			glDrawArrays(GL_TRIANGLES, 0, m.vertexCount);
+            }
+			// // bind shadow map
+			// glActiveTexture(GL_TEXTURE1);
+			// glBindTexture(GL_TEXTURE_2D, shadowDepthTex);
+			// glUniform1i(shadowMapLoc, 1);
+			//         glUniformMatrix4fv(depthMVPLoc, 1, GL_FALSE, &depthMVP[0][0]);
+            glDrawArrays(GL_TRIANGLES, 0, m.vertexCount);
         }
-		glfwSwapBuffers(window);
-		glfwPollEvents();
 
-	} // Check if the ESC key was pressed or the window was closed
-	while( glfwGetKey(window, GLFW_KEY_ESCAPE ) != GLFW_PRESS &&
-		   glfwWindowShouldClose(window) == 0 );
-	return 0;
+        glfwSwapBuffers(window);
+        glfwPollEvents();
+
+    } while (glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS &&
+             glfwWindowShouldClose(window) == 0);
+
+    return 0;
 }
-
