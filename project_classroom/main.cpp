@@ -83,12 +83,9 @@ int main( void )
 	GLuint phongProgram = LoadShaders( "Phong.vertexshader", "Phong.fragmentshader" );
 	GLuint gouraudProgram = LoadShaders( "Gouraud.vertexshader", "Gouraud.fragmentshader" );
 
-	bool usePhong = true;
-	if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS)
-		usePhong = true;
-	if (glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS)
-		usePhong = false;
-	GLuint programID = usePhong ? phongProgram : gouraudProgram;
+	bool usePhong = false;
+	// switch in runtime
+	GLuint programID = usePhong ? phongProgram : gouraudProgram;	
 
 	const int NUM_LIGHTS = 9;
 	std::vector<glm::vec3> lightPositions;
@@ -106,8 +103,6 @@ int main( void )
 			float z = stepZ * iy - stepZ/2.0f;;
 
 			lightPositions.push_back(glm::vec3(x, y, z));
-			std::cout << "glmesh.useTexture = false;\n";
-			std::cout << "glmesh.metarialColor = glm::vec3(1.0f, 1.0f, 0.9f);\n";
 			std::cout << "std::cout << \"light at ("
 					<< x << ", " << y << ", " << z << ")\\n\";\n\n";
 		}
@@ -119,9 +114,6 @@ int main( void )
 	GLuint TextureID  = glGetUniformLocation(programID, "myTextureSampler");
 	GLuint MaterialColorID = glGetUniformLocation(programID, "materialColor");
 
-	glUseProgram(programID);
-    GLint lightPosLoc = glGetUniformLocation(programID, "LightPosition_worldspace");
-	glUniform3fv(lightPosLoc, NUM_LIGHTS, &lightPositions[0].x);
 
 	// ---------- Load OBJ with materials ----------
     std::vector<MaterialMesh> materialMeshes;
@@ -130,7 +122,6 @@ int main( void )
     std::cout << "Loaded " << materialMeshes.size() << " material meshes\n";
 
 	glm::vec3 minV(FLT_MAX), maxV(-FLT_MAX);
-	// compute bounding box across all material meshes
 	for (auto &m : materialMeshes) {
 		for (auto &v : m.vertices) {
 			minV.x = std::min(minV.x, v.x);
@@ -166,7 +157,7 @@ int main( void )
 			<< maxV.z << std::endl;
 
 
-	// ----------- Convert to OpenGL buffers ------------
+	// from material meshes to GLMeshes
     for (auto& m : materialMeshes)
     {
         GLMesh glmesh;
@@ -174,7 +165,6 @@ int main( void )
         glmesh.useTexture = false;
         glmesh.textureID = 0;
 
-		// Assign textures manually:
         if (m.materialName == "wood") {
             glmesh.textureID = loadBMP_custom("bench_wood.bmp");
             glmesh.useTexture = true;
@@ -182,30 +172,30 @@ int main( void )
         }
         else if (m.materialName == "board") {
 			glmesh.useTexture = false;
-			glmesh.metarialColor = glm::vec3(.13f, .545f, .13f);
+			glmesh.metarialColor = glm::vec3(0.0f, 0.55f, 0.29f); // dark green
             std::cout << "green board\n";
         }
 		else if (m.materialName == "projector"){
 			glmesh.useTexture = false;
-			glmesh.metarialColor = glm::vec3(0.8f, 0.8f, 0.8f);
+			glmesh.metarialColor = glm::vec3(0.8f, 0.8f, 0.8f); // light gray
 			std::cout << "projector\n";
 		}
 		else if(m.materialName == "podium"){
 			glmesh.useTexture = false;
-			glmesh.metarialColor = glm::vec3(0.8f, 0.5f, 0.2f);
+			glmesh.metarialColor = glm::vec3(0.88f, 0.63f, 0.27f); // 
 			std::cout << "podium\n";
 		}
 		else if (m.materialName == "wall") {
-			glmesh.textureID = loadBMP_custom("floor_texture.bmp");
-			glmesh.useTexture = true;
-			std::cout << "Wood mesh uses texture bench_texture.bmp\n";
-			//glmesh.metarialColor = glm::vec3(1.0f, .99f, .81f);
-			std::cout << "room\n";		
+			glmesh.useTexture = false;
+			glmesh.metarialColor = glm::vec3(1.0f, .99f, .81f); // yellowish
 		}
 		else if (m.materialName == "metal"){
 			glmesh.useTexture = false;
-			glmesh.metarialColor = glm::vec3(0.8f, 0.8f, 0.8f);
-			std::cout << "metal\n";
+			glmesh.metarialColor = glm::vec3(0.8f, 0.8f, 0.8f); // light gray
+		}
+		else if (m.materialName == "floor") {
+			glmesh.useTexture = true;
+			glmesh.textureID = loadBMP_custom("floor_texture.bmp");
 		}
 
 		MaterialMesh indexedMesh = m;
@@ -242,6 +232,13 @@ int main( void )
 	do{
 		double currentTime = glfwGetTime();
 		nbFrames++;
+			if(glfwGetKey(window, GLFW_KEY_SPACE ) == GLFW_PRESS){
+			usePhong = !usePhong;
+			while(glfwGetKey(window, GLFW_KEY_SPACE ) == GLFW_PRESS){
+				glfwPollEvents();
+			}
+		}
+		programID = usePhong ? phongProgram : gouraudProgram;
 		if ( currentTime - lastTime >= 1.0 ){ // If last prinf() was more than 1sec ago
 			// printf and reset
 			printf("%f ms/frame\n", 1000.0/double(nbFrames));
@@ -252,6 +249,14 @@ int main( void )
 
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glUseProgram(programID);
+		GLint lightPosLoc = glGetUniformLocation(programID, "LightPosition_worldspace");
+		glUniform3fv(lightPosLoc, NUM_LIGHTS, &lightPositions[0].x);
+
+		GLuint MatrixID = glGetUniformLocation(programID, "MVP");
+		GLuint ViewMatrixID = glGetUniformLocation(programID, "V");
+		GLuint ModelMatrixID = glGetUniformLocation(programID, "M");
+		GLuint TextureID  = glGetUniformLocation(programID, "myTextureSampler");
+		GLuint MaterialColorID = glGetUniformLocation(programID, "materialColor");
 
 		computeMatricesFromInputs();
 		glm::mat4 ProjectionMatrix = getProjectionMatrix();
@@ -262,9 +267,6 @@ int main( void )
 		glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);
 		glUniformMatrix4fv(ModelMatrixID, 1, GL_FALSE, &ModelMatrix[0][0]);
 		glUniformMatrix4fv(ViewMatrixID, 1, GL_FALSE, &ViewMatrix[0][0]);
-
-		// glm::vec3 lightPos = glm::vec3(4,4,4);
-		// glUniform3f(LightID, lightPos.x, lightPos.y, lightPos.z);
 
         for (auto& m : GLMeshes) {
 
@@ -282,7 +284,7 @@ int main( void )
             glBindBuffer(GL_ARRAY_BUFFER, m.normalbuffer);
             glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, 0);
 
-			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m.elementbuffer);
+			// glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m.elementbuffer);
 
             if (m.useTexture) {
 				glUniform1i(glGetUniformLocation(programID,"useTexture"), 1);
@@ -299,12 +301,6 @@ int main( void )
             //glDrawElements(GL_TRIANGLES, m.indices.size(), GL_UNSIGNED_SHORT, (void*)0);
 			glDrawArrays(GL_TRIANGLES, 0, m.vertexCount);
         }
-
-		// // Bind our texture in Texture Unit 0
-		// glActiveTexture(GL_TEXTURE0);
-		// glBindTexture(GL_TEXTURE_2D, Texture);
-		// // Set our "myTextureSampler" sampler to use Texture Unit 0
-		// glUniform1i(TextureID, 0);
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 

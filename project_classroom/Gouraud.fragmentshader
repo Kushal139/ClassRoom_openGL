@@ -1,8 +1,18 @@
 #version 330 core
 in vec2 UV;
-in vec3 vertexColor;
+in vec3 lightingColor;
+
+uniform bool useTexture;
+uniform sampler2D myTextureSampler;
+uniform vec3 materialColor;
+
 out vec3 color;
 
 void main() {
-    color = vertexColor;
+
+    vec3 baseColor = useTexture ?
+                     texture(myTextureSampler, UV).rgb :
+                     materialColor;
+
+    color = baseColor * lightingColor;
 }
