@@ -170,23 +170,22 @@ int main(void)
             glmesh.useTexture = true;
         }
         else if (m.materialName == "board") {
-            glmesh.useTexture   = false;
+            glmesh.useTexture   = false;    
             glmesh.metarialColor = glm::vec3(.03f, .30f, .11f);
-            std::cout << "green board\n";
         }
         else if (m.materialName == "projector") {
             glmesh.useTexture   = false;
             glmesh.metarialColor = glm::vec3(0.8f, 0.8f, 0.8f);
-            std::cout << "projector\n";
         }
 		else if(m.materialName == "podium"){
 			glmesh.useTexture = false;
 			glmesh.metarialColor = glm::vec3(0.88f, 0.63f, 0.27f); // 
-            std::cout << "podium\n";
         }
         else if (m.materialName == "wall") {
-			glmesh.useTexture = false;
-			glmesh.metarialColor = glm::vec3(1.0f, .99f, .81f); // yellowish
+			// glmesh.useTexture = false;
+			// glmesh.metarialColor = glm::vec3(1.0f, .99f, .81f); // yellowish
+            glmesh.useTexture = true;
+            glmesh.textureID = loadBMP_custom("wall.bmp");
         }
 		else if (m.materialName == "metal"){
 			glmesh.useTexture = false;

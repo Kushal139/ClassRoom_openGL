@@ -41,6 +41,8 @@ void main() {
 
         vec3 l = normalize(LightDirection_cameraspace[i]);
         float cosTheta = clamp(dot(n, l), 0.0, 1.0);
+
+        // specular calculation
         vec3 R = reflect(-l, n);
         float cosAlpha = clamp(dot(E, R), 0.0, 1.0);
 
