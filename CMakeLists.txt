@@ -38,7 +38,6 @@ include_directories(
 	external/glm-0.9.7.1/
 	external/glew-1.13.0/include/
 	external/assimp-3.0.1270/include/
-	external/tinyobjloader/
 	external/bullet-2.81-rev2613/src/
 	.
 )
