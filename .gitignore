@@ -1,3 +1,6 @@
+.vs/
+*.VC.db
+*.ipch
 **/*.dll
 **/*.exe
 build/*
